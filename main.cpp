@@ -2,6 +2,7 @@
 #include <ncurses.h>
 #include <vector>
 #include <string>
+#include <fstream>
 using namespace std;
 
 #define ctrl(x) (x & 0x1F)
@@ -12,11 +13,23 @@ void save(WINDOW *stdscr ){
     int maxx , maxy;
     vector<string> data;
     data.clear();
-    string line;
     getmaxyx(stdscr, maxy , maxx);
-    for(int i=0 ; i<maxx ; i++){
-         
+    for(int y=0 ; y<maxy ; y++){
+        string line;
+        for(int x=0;x<maxx;x++){
+         char ch = mvinch(y ,x ) & A_CHARTEXT;
+         line += (ch ? ch : ' ');
     }
+       data.push_back(line);
+    }
+    ofstream MyFile("test.txt");
+    for(int i=0;i<data.size();i++){
+        //  move(i+1,0);
+        //  printw("%s" , data[i].c_str());
+         MyFile << data[i];
+        //  refresh();
+    }
+    MyFile.close();
 }
 
 int main()
