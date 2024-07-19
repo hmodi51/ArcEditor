@@ -8,13 +8,26 @@ using namespace std;
 #define ctrl(x) (x & 0x1F)
 
 
-void save(WINDOW *stdscr ){
+void openFile(string name){
+    ifstream MyReadFile(name);
+    string text;
+    while(getline (MyReadFile, text )){
+        printw("%s" , text.c_str());
+    //    cout << text;
+        refresh();
+    }
+}
+
+
+void save(WINDOW *stdscr , string name, int maxy){
 //    scr_dump("test.txt");
-    int maxx , maxy;
+cout << maxy;
+    int maxx;
+    int tempy;
     vector<string> data;
     data.clear();
-    getmaxyx(stdscr, maxy , maxx);
-    for(int y=0 ; y<maxy ; y++){
+    getmaxyx(stdscr, tempy , maxx);
+    for(int y=0 ; y<=maxy ; y++){
         string line;
         for(int x=0;x<maxx;x++){
          char ch = mvinch(y ,x ) & A_CHARTEXT;
@@ -22,7 +35,7 @@ void save(WINDOW *stdscr ){
     }
        data.push_back(line);
     }
-    ofstream MyFile("test.txt");
+    ofstream MyFile(name);
     for(int i=0;i<data.size();i++){
         //  move(i+1,0);
         //  printw("%s" , data[i].c_str());
@@ -32,15 +45,32 @@ void save(WINDOW *stdscr ){
     MyFile.close();
 }
 
-int main()
+int main(int argc , char* argv[])
 {	
+    string name;
+    if (argc > 1){
+        name = argv[1];
+    }
     int ch;
+    int oldy;
+    int newy;
+    int oldx;
 	initscr();			
 	cbreak;			
 	keypad(stdscr , true);
     noecho();
+     openFile(name);
     while((ch=getch())!=KEY_F(1))
     {
+        getyx(stdscr,newy,oldx);
+        if(newy>oldy){
+            oldy=newy;
+            cout << "testing";
+        }
+        else{
+            newy=oldy;
+            cout << "testing2";
+        }
         switch(ch){
             case KEY_BACKSPACE :
                  int x , y;
@@ -71,7 +101,7 @@ int main()
                   move(y,x-1);
                   break;
               case ctrl('O') :
-                  save(stdscr);
+                  save(stdscr , name , newy);
                   break;
             default:
                   printw("%c" , ch);
@@ -80,5 +110,4 @@ int main()
     }
     endwin();
 	return 0;
-	
 }
