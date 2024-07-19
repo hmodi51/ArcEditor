@@ -18,7 +18,7 @@ void save(WINDOW *stdscr ){
         string line;
         for(int x=0;x<maxx;x++){
          char ch = mvinch(y ,x ) & A_CHARTEXT;
-         line += (ch ? ch : '');
+         line += ch;
     }
        data.push_back(line);
     }
