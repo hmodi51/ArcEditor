@@ -1,1 +1,1 @@
-Text Editor
+ARC Editor
