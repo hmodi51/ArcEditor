@@ -19,18 +19,18 @@ void openFile(string name){
 }
 
 
-void save(WINDOW *stdscr , string name, int maxy){
+void save(WINDOW *editWindow , string name, int maxy){
 //    scr_dump("test.txt");
 cout << maxy;
     int maxx;
     int tempy;
     vector<string> data;
     data.clear();
-    getmaxyx(stdscr, tempy , maxx);
+    getmaxyx(editWindow, tempy , maxx);
     for(int y=0 ; y<=maxy ; y++){
         string line;
         for(int x=0;x<maxx;x++){
-         char ch = mvinch(y ,x ) & A_CHARTEXT;
+         char ch = mvinch( y ,x ) & A_CHARTEXT;
          line += ch;
     }
        data.push_back(line);
@@ -56,57 +56,64 @@ int main(int argc , char* argv[])
     int newy;
     int oldx;
 	initscr();			
-	cbreak;			
-	keypad(stdscr , true);
+	cbreak();			
     noecho();
      openFile(name);
-    while((ch=getch())!=KEY_F(1))
+     WINDOW *editWindow = newwin(100, 5, 1,1);
+     keypad(editWindow , true);
+     scrollok(editWindow , true);
+     idlok(editWindow , true);
+    while((ch=wgetch(editWindow))!=KEY_F(1))
     {
-        getyx(stdscr,newy,oldx);
-        if(newy>oldy){
-            oldy=newy;
-            cout << "testing";
-        }
-        else{
-            newy=oldy;
-            cout << "testing2";
-        }
+        getyx(editWindow,newy,oldx);
+        // if(newy>oldy){
+        //     oldy=newy;
+        //     // cout << "testing";
+        // }
+        // else{
+        //     newy=oldy;
+        //     // cout << "testing2";
+        // }
+        //wprintw(editWindow , "Key code: %d", ch);
         switch(ch){
             case KEY_BACKSPACE :
+            case 127:
                  int x , y;
-                 getyx(stdscr , y , x);
-                  if(x<1){
-                    y=y-1;
-                    move(y,x);
+                 getyx(editWindow , y , x);
+                // wprintw(editWindow , "print0");
+                  if(x>0){
+                    wmove(editWindow , y,x-1);
                   }
                   else{
-                    move(y,x-1);
+                  //  wprintw(editWindow , "print1");
+                    wmove(editWindow , y-1,x);
+                  //  wprintw(editWindow , "testing");
                   }
-                 delch();
+                 wdelch(editWindow);
                  break;
             case KEY_UP :
-                  getyx(stdscr , y , x);
-                  move(y-1,x);
+                  getyx(editWindow , y , x);
+                  wmove(editWindow , y-1,x);
                   break;
              case KEY_DOWN :
-                  getyx(stdscr , y , x);
-                  move(y+1,x);
+                  getyx(editWindow , y , x);
+                  wmove(editWindow , y+1,x);
                   break;
              case KEY_RIGHT :
-                  getyx(stdscr , y , x);
-                  move(y,x+1);
+                  getyx(editWindow , y , x);
+                  wmove(editWindow ,  y ,x+1);
                   break;
               case KEY_LEFT :
-                  getyx(stdscr , y , x);
-                  move(y,x-1);
+                  getyx(editWindow , y , x);
+                  wmove(editWindow,  y,x-1);
                   break;
               case ctrl('O') :
-                  save(stdscr , name , newy);
+                  save(editWindow, name , newy);
                   break;
             default:
-                  printw("%c" , ch);
+                  wprintw(editWindow , "%c" , ch);
         }
-        refresh();
+        wrefresh(editWindow);
     }
     endwin();
 	return 0;
