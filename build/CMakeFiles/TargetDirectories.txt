@@ -1,0 +1,3 @@
+/home/ghostxxx/Personal-Projects/TextEditor/build/CMakeFiles/editor.dir
+/home/ghostxxx/Personal-Projects/TextEditor/build/CMakeFiles/edit_cache.dir
+/home/ghostxxx/Personal-Projects/TextEditor/build/CMakeFiles/rebuild_cache.dir
