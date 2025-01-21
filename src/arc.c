@@ -16,7 +16,7 @@ void funcRawModeEnabled(){
    tcgetattr(STDIN_FILENO , &original);
    atexit(funcRawModeDisabled);
    noecho = original;
-   noecho.c_lflag = noecho.c_lflag ^ ECHO;
+   noecho.c_lflag = noecho.c_lflag ^ ( ECHO | ICANON );
    tcsetattr(STDIN_FILENO , TCSAFLUSH , &noecho);
    
 
