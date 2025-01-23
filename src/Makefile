@@ -5,7 +5,7 @@ CFLAGS=-Wall -Wextra -pedantic
 
 TARGET=arc
 
-SRCS=arc.c terminal.c
+SRCS=arc.c terminal.c input.c
 
 OBJS=$(SRCS:.c=.o)
 

@@ -1,1 +1,1 @@
-arc.o: arc.c terminal.h
+arc.o: arc.c terminal.h commons.h input.h

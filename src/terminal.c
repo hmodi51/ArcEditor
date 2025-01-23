@@ -1,5 +1,7 @@
 /*** includes ***/
 #include "terminal.h"
+#include "commons.h"
+#include "input.h"
 
 /*** struct ***/
 struct termios original;
