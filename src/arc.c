@@ -1,4 +1,6 @@
 
+/*** includes ***/
+
 #include <unistd.h>
 #include <termios.h>
 #include <stdlib.h>
@@ -6,8 +8,16 @@
 #include <stdio.h>
 
 
+/*** defines ***/
 
+#define CTRL(i) ((i) & 0x1F)
+
+
+/*** struct ***/
 struct termios original;
+
+
+/*** terminal ***/
 
 // disabling the raw mode which will reset the settings of terminal
 void funcRawModeDisabled(){
@@ -28,20 +38,43 @@ void funcRawModeEnabled(){
    noecho.c_cc[VTIME] = 1;
    tcsetattr(STDIN_FILENO , TCSAFLUSH , &noecho);
    
-
 }
+
+
+char editorReadKey(){
+    char c;
+    read(STDIN_FILENO , &c , 1);
+    return c;
+}
+
+
+/*** input ***/
+
+void processKeypress(){
+   while(1){
+   char c = editorReadKey();
+   switch(c){
+      case CTRL('q'):
+         return;
+         break;
+   }
+   }
+}
+
+
+
+/*** init ***/
 
 int main() {
   funcRawModeEnabled();
-  char c;
-  while(1){
-   c = '\0';
-   read(STDIN_FILENO , &c , 1);
-   if (c=='q'){
-      break;
-   }
-  }
-//   while (read(STDIN_FILENO , &c , 1) == 1 && c!= 'q');
-//       printf("%d " , c);
+  processKeypress();
+//   char c;
+//   while(1){
+//    c = '\0';
+//    read(STDIN_FILENO , &c , 1);
+//    if (c==CTRL('q')){
+//       break;
+//    }
+//   }
   return 0;
 }
