@@ -9,18 +9,24 @@
 
 struct termios original;
 
-
+// disabling the raw mode which will reset the settings of terminal
 void funcRawModeDisabled(){
-   tcsetattr(STDIN_FILENO , TCSAFLUSH , &original);   // set the terminal attribute back to as it was before starting the program
+   tcsetattr(STDIN_FILENO , TCSAFLUSH , &original);
 }
 
 void funcRawModeEnabled(){
    struct termios noecho;
    tcgetattr(STDIN_FILENO , &original);
-   atexit(funcRawModeDisabled);                       // at exit is called when the program terminated and calls the function argument
+   //calling the function in atexit when the program terminates
+   atexit(funcRawModeDisabled);                       
    noecho = original;
-   noecho.c_lflag = noecho.c_lflag ^ ( ECHO | ICANON );  //disables the terminal functions like ECHO and ICANON
-   tcsetattr(STDIN_FILENO , TCSAFLUSH , &noecho);  
+   // disabling terminal control functions ECHO AND ICANON
+   noecho.c_lflag &= ~( ECHO | ICANON | ISIG | IEXTEN );
+   noecho.c_iflag &= ~( ICRNL | IXON);
+   noecho.c_oflag &= ~(OPOST);
+   noecho.c_cc[VMIN] = 0;
+   noecho.c_cc[VTIME] = 1;
+   tcsetattr(STDIN_FILENO , TCSAFLUSH , &noecho);
    
 
 }
@@ -28,7 +34,14 @@ void funcRawModeEnabled(){
 int main() {
   funcRawModeEnabled();
   char c;
-  while (read(STDIN_FILENO , &c , 1) == 1 && c!= 'q');
-  printf("%d " , c);
+  while(1){
+   c = '\0';
+   read(STDIN_FILENO , &c , 1);
+   if (c=='q'){
+      break;
+   }
+  }
+//   while (read(STDIN_FILENO , &c , 1) == 1 && c!= 'q');
+//       printf("%d " , c);
   return 0;
 }
