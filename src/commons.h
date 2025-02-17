@@ -8,5 +8,8 @@
 #include <ctype.h>
 #include <stdio.h>
 #include <error.h>
+#include <stdio.h>
+#include <string.h>
 
 #endif
+

@@ -27,7 +27,7 @@ void funcRawModeEnabled(){
    atexit(funcRawModeDisabled);                       
    noecho = original;
    // disabling terminal control functions ECHO AND ICANON
-   noecho.c_lflag &= ~( ECHO | ICANON | ISIG | IEXTEN );
+   noecho.c_lflag &= ~(  ICANON | ISIG | IEXTEN );
    noecho.c_iflag &= ~( ICRNL | IXON);
    noecho.c_oflag &= ~(OPOST);
    noecho.c_cc[VMIN] = 0;
