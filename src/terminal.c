@@ -10,12 +10,19 @@ struct termios original;
 
 // disabling the raw mode which will reset the settings of terminal
 void funcRawModeDisabled(){
-   tcsetattr(STDIN_FILENO , TCSAFLUSH , &original);
+  if(tcsetattr(STDIN_FILENO , TCSAFLUSH , &original) == -1){
+   perror("tcsetattr");
+  }
 }
 
+
+//enabling raw mode
 void funcRawModeEnabled(){
    struct termios noecho;
-   tcgetattr(STDIN_FILENO , &original);
+   // saving the settings of the terminal in termios struct original
+   if(tcgetattr(STDIN_FILENO , &original) == -1){
+      perror("tcgetattr");
+   }
    //calling the function in atexit when the program terminates
    atexit(funcRawModeDisabled);                       
    noecho = original;
@@ -25,7 +32,9 @@ void funcRawModeEnabled(){
    noecho.c_oflag &= ~(OPOST);
    noecho.c_cc[VMIN] = 0;
    noecho.c_cc[VTIME] = 1;
-   tcsetattr(STDIN_FILENO , TCSAFLUSH , &noecho);
+   if(tcsetattr(STDIN_FILENO , TCSAFLUSH , &noecho) == -1){
+      perror("tcsetattr");
+   }
    
 }
 

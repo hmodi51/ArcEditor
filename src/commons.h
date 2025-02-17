@@ -7,5 +7,6 @@
 #include <stdlib.h>
 #include <ctype.h>
 #include <stdio.h>
+#include <error.h>
 
 #endif
